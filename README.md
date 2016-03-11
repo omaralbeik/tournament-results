@@ -3,9 +3,9 @@ A database schema and application to store the game matches between players and 
 
 ##Installation
 ####Prerequisites:
-Git [download](http://git-scm.com/downloads)
-Virtual Box [download](https://www.virtualbox.org/wiki/Downloads)
-Vagrant [download](https://www.vagrantup.com/downloads.html)
+- Git [download](http://git-scm.com/downloads)
+- Virtual Box [download](https://www.virtualbox.org/wiki/Downloads)
+- Vagrant [download](https://www.vagrantup.com/downloads.html)
 
 ####How to Install:
 1. Open terminal:
