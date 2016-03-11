@@ -9,26 +9,57 @@
 -- remove any old database (if available)
 DROP DATABASE IF EXISTS tournament;
 
--- drop any old tables
-DROP TABLE IF EXISTS players;
-DROP TABLE IF EXISTS matches;
-
 -- create the database
 CREATE DATABASE tournament;
 
--- players table
+-- connect to database
+\c tournament;
+
+
+-- players table contains ids and names for all players
+--| id | name |--
+
 CREATE TABLE players (
   id SERIAL PRIMARY KEY,
   name TEXT
-)
+);
 
--- matches table
+-- matches table contains information about played matches
+--| id | player1 | opponent2 | winner |--
+
 CREATE TABLE matches (
   id SERIAL PRIMARY KEY,
-  player_id INTEGER REFERENCES players (id) ON DELETE CASCADE,
-  opponent_id INTEGER REFERENCES players (id) ON DELETE CASCADE,
-  winner_id INTEGER REFERENCES players (id) ON DELETE CASCADE
-)
+  player1 INTEGER REFERENCES players(id) ON DELETE CASCADE,
+  player2 INTEGER REFERENCES players(id) ON DELETE CASCADE,
+  winner INTEGER REFERENCES players(id) ON DELETE CASCADE
+);
 
--- connect to database
-\c tournament;
+
+-- players_matches: number of matches played by each player
+-- | id | name | matches |--
+
+CREATE VIEW players_matches AS
+  SELECT players.id as id, players.name as name, COUNT(matches) as matches
+  FROM players LEFT OUTER JOIN matches
+  ON players.id = matches.player1 OR players.id = matches.player2
+  GROUP BY players.id;
+
+
+-- players_wins: number of wins for each player
+--| id | name | wins |--
+
+CREATE VIEW players_wins AS
+  SELECT players.id as id, players.name as name, COUNT(matches) as wins
+  FROM players LEFT OUTER JOIN matches
+  ON players.id = matches.winner
+  GROUP BY players.id
+  ORDER BY wins DESC;
+
+
+-- players_standings: number of wins and matches played for each player
+--| id | name | wins | matches|--
+
+CREATE VIEW players_standings AS
+  SELECT players.id as id, players.name as name, players_wins.wins as wins, players_matches.matches as matches
+  FROM players, players_wins, players_matches
+  WHERE players.id = players_wins.id and players_wins.id = players_matches.id;

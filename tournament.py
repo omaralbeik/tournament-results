@@ -18,8 +18,6 @@ def deleteMatches():
     c.execute("DELETE FROM matches;")
     db.commit()
     db.close()
-    print "____________________________________________"
-    print "=> All matches were deleted successfully."
 
 
 def deletePlayers():
@@ -29,8 +27,6 @@ def deletePlayers():
     c.execute("DELETE FROM players;")
     db.commit()
     db.close()
-    print "____________________________________________"
-    print "=> All players were deleted successfully."
 
 
 def countPlayers():
@@ -54,11 +50,9 @@ def registerPlayer(name):
     """
     db = connect()
     c = db.cursor()
-    c.execute("INSERT INTO players (name) VALUES (%s)",(name,))
+    c.execute("INSERT INTO players (name) VALUES (%s)", (name,))
     db.commit()
     db.close()
-    print "____________________________________________"
-    print "=> player " + name + "were created and added to database successfully."
 
 
 def playerStandings():
@@ -74,7 +68,12 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
+    db = connect()
+    c = db.cursor()
+    c.execute("SELECT * FROM players_standings")
+    rows = c.fetchall()
+    db.close()
+    return rows
 
 
 def reportMatch(winner, loser):
@@ -84,6 +83,12 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    db = connect()
+    c = db.cursor()
+    query = "INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s)"
+    c.execute(query, (winner, loser, winner,))
+    db.commit()
+    db.close()
 
 
 def swissPairings():
@@ -101,3 +106,21 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    db = connect()
+    c = db.cursor()
+    c.execute("SELECT * FROM players_wins")
+    rows = c.fetchall()
+    db.close()
+
+    i = 0
+    pairings = []
+
+    while i < len(rows):
+        id1 = rows[i][0]
+        name1 = rows[i][1]
+        id2 = rows[i + 1][0]
+        name2 = rows[i + 1][1]
+        pairings.append((id1, name1, id2, name2))
+        i = i + 2
+
+    return pairings
