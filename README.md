@@ -63,7 +63,7 @@ tournament.deleteMatches()
 tournament.playerStandings()
 ```
 
-##### delete the entire database ad start fress again:
+##### to delete the entire database and start fress again:
   - exit python command line by entering `exit()`
 ```
 psql -f tournament.sql
