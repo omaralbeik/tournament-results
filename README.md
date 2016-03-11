@@ -17,8 +17,8 @@ Created for Udacity's Full-stack nanodegree program (project 2).
   - Run: `git clone http://github.com/udacity/fullstack-nanodegree-vm tournament`
 4. move to *vagrant* directory by entering `cd tournament/vagrant/`
 5. Clone the project files
-  - Run: `git clone https://github.com/omaralbeik/tournament-results.git tournament`
-  - this will add the project to *tournament* inside the *vagrant* directory
+  - Run: `git clone https://github.com/omaralbeik/tournament-results.git swiss-tournament`
+  - this will add the project to *swiss-tournament* inside the *vagrant* directory
 6. Start Vagrant by entering: `vagrant up`
 
 ####How to Run:
@@ -27,7 +27,7 @@ Once all steps above are complete, you can connect to the virtual machine.
 1. Log into Vagrant virtual machine:
   - Run `vagrant ssh`
 2. Move to *tournament* directory:
-  - Enter `cd /vagrant/tournament/`
+  - Enter `cd /vagrant/swiss-tournament/`
 3. Create the required database:
   - Run `psql -f tournament.sql`
 4. Launch Python command line:
