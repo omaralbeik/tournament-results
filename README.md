@@ -1,6 +1,7 @@
 # Swiss Tournament Results
 A database schema and application to store the game matches between players and determine the winner based on the swiss tournament style, using Python and PSQL.
-created for Udacity's Full-stack nanodegree program
+
+Created for Udacity's Full-stack nanodegree program (project 2).
 
 ##Installation
 ####Prerequisites:
