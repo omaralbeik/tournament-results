@@ -65,7 +65,12 @@ tournament.playerStandings()
 
 ##### delete the entire database ad start fress again:
   - exit python command line by entering `exit()`
-
 ```
 psql -f tournament.sql
 ```
+
+##### to test the project against Udacity's full-stack nanodegree test rubrics
+```
+python tournament_test.py
+```
+  - this will create fake data to test the project, please re-create the database after test is completed
