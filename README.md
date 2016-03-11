@@ -15,10 +15,10 @@ Created for Udacity's Full-stack nanodegree program (project 2).
   - this directory will be used to store the entire project files
 3. Clone the virtual machine configurations
   - Run: `git clone http://github.com/udacity/fullstack-nanodegree-vm tournament`
-4. move to *vagrant* directory by entering `cd tournament/vagrant/`
+4. move to *vagrant* directory by entering `cd tournament/vagrant/` and delete stock tournament folder by entering `rm -r tournament`
 5. Clone the project files
-  - Run: `git clone https://github.com/omaralbeik/tournament-results.git swiss-tournament`
-  - this will add the project to *swiss-tournament* inside the *vagrant* directory
+  - Run: `git clone https://github.com/omaralbeik/tournament-results.git tournament`
+  - this will add the project to *tournament* inside the *vagrant* directory
 6. Start Vagrant by entering: `vagrant up`
 
 ####How to Run:
