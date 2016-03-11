@@ -27,7 +27,7 @@ Once all steps above are complete, you can connect to the virtual machine.
 1. Log into Vagrant virtual machine:
   - Run `vagrant ssh`
 2. Move to *tournament* directory:
-  - Enter `cd /vagrant/swiss-tournament/`
+  - Enter `cd /vagrant/tournament/`
 3. Create the required database:
   - Run `psql -f tournament.sql`
 4. Launch Python command line:
