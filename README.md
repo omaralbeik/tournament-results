@@ -42,7 +42,7 @@ tournament.registerPlayer(player name)
 
 ##### to report a match results:
 ```
-tournament.reportMatch(winner, loser)
+tournament.reportMatch(winner_id, loser_id)
 ```
 
 ##### to get pairings:
