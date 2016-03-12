@@ -4,39 +4,53 @@
 #
 
 import psycopg2
+from contextlib import contextmanager
 
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+    try:
+        return psycopg2.connect("dbname=tournament")
+    except:
+        print("Connection failed")
+
+@contextmanager
+def get_cursor():
+    """
+    Query helper function using context lib. Creates a cursor from a database
+    connection object, and performs queries using that cursor.
+    """
+    DB = connect()
+    cursor = DB.cursor()
+    try:
+        yield cursor
+    except:
+        raise
+    else:
+        DB.commit()
+    finally:
+        cursor.close()
+        DB.close()
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    db = connect()
-    c = db.cursor()
-    c.execute("DELETE FROM matches;")
-    db.commit()
-    db.close()
+    with get_cursor() as cursor:
+        cursor.execute("DELETE FROM matches;")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    db = connect()
-    c = db.cursor()
-    c.execute("DELETE FROM players;")
-    db.commit()
-    db.close()
+    with get_cursor() as cursor:
+        cursor.execute("DELETE FROM players;")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    db = connect()
-    c = db.cursor()
-    c.execute("SELECT COUNT(id) FROM players;")
-    rows = c.fetchall()
-    db.close()
-    return rows[0][0]
+    with get_cursor() as cursor:
+        cursor.execute("SELECT COUNT(id) FROM players;")
+        rows = cursor.fetchall()
+        return rows[0][0]
 
 
 def registerPlayer(name):
@@ -48,11 +62,8 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    db = connect()
-    c = db.cursor()
-    c.execute("INSERT INTO players (name) VALUES (%s)", (name,))
-    db.commit()
-    db.close()
+    with get_cursor() as cursor:
+        cursor.execute("INSERT INTO players (name) VALUES (%s)", (name,))
 
 
 def playerStandings():
@@ -68,12 +79,10 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    db = connect()
-    c = db.cursor()
-    c.execute("SELECT * FROM players_standings")
-    rows = c.fetchall()
-    db.close()
-    return rows
+    with get_cursor() as cursor:
+        cursor.execute("SELECT * FROM players_standings")
+        rows = cursor.fetchall()
+        return rows
 
 
 def reportMatch(winner, loser):
@@ -83,12 +92,9 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    db = connect()
-    c = db.cursor()
-    query = "INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s)"
-    c.execute(query, (winner, loser, winner,))
-    db.commit()
-    db.close()
+    with get_cursor() as cursor:
+        query = "INSERT INTO matches (player1, player2) VALUES (%s, %s)"
+        cursor.execute(query, (winner, loser,))
 
 
 def swissPairings():
@@ -106,21 +112,16 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    db = connect()
-    c = db.cursor()
-    c.execute("SELECT * FROM players_wins")
-    rows = c.fetchall()
-    db.close()
+    with get_cursor() as cursor:
+        cursor.execute("SELECT * FROM players_wins")
+        rows = cursor.fetchall()
+        pairings = []
 
-    i = 0
-    pairings = []
-
-    while i < len(rows):
-        id1 = rows[i][0]
-        name1 = rows[i][1]
-        id2 = rows[i + 1][0]
-        name2 = rows[i + 1][1]
-        pairings.append((id1, name1, id2, name2))
-        i = i + 2
-
-    return pairings
+        for i in range(0, len(rows), 2):
+            id1 = rows[i][0]
+            name1 = rows[i][1]
+            id2 = rows[i + 1][0]
+            name2 = rows[i + 1][1]
+            pairings.append((id1, name1, id2, name2))
+            i += 2
+        return pairings

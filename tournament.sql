@@ -25,13 +25,12 @@ CREATE TABLE players (
 );
 
 -- matches table contains information about played matches
---| id | player1 | opponent2 | winner |--
+--| id | player1 | player2 |--
 
 CREATE TABLE matches (
   id SERIAL PRIMARY KEY,
   player1 INTEGER REFERENCES players(id) ON DELETE CASCADE,
-  player2 INTEGER REFERENCES players(id) ON DELETE CASCADE,
-  winner INTEGER REFERENCES players(id) ON DELETE CASCADE
+  player2 INTEGER REFERENCES players(id) ON DELETE CASCADE
 );
 
 
@@ -51,7 +50,7 @@ CREATE VIEW players_matches AS
 CREATE VIEW players_wins AS
   SELECT players.id as id, players.name as name, COUNT(matches) as wins
   FROM players LEFT OUTER JOIN matches
-  ON players.id = matches.winner
+  ON players.id = matches.player1
   GROUP BY players.id
   ORDER BY wins DESC;
 
